@@ -18,4 +18,4 @@
 
 - name: Wait for EC2 instance 
   ansible.builtin.pause:
-    seconds: 120
+    seconds: 60
