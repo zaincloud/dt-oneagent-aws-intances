@@ -1,0 +1,4 @@
+---
+
+token: "" #paas token
+env_id: "" # dyntrace environment ID

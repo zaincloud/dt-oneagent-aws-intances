@@ -1,0 +1,19 @@
+---
+
+- name: Download Dynatrace OneAgent installer
+  ansible.builtin.get_url:
+    url: "https://{{ env_id }}/api/v1/deployment/installer/agent/unix/default/latest?arch=x86"
+    dest: "/tmp/Dynatrace-OneAgent-Linux-1.297.53.20240820-121511.sh"
+    headers:
+      Authorization: "Api-Token {{ token }}"
+
+- name: Download Dynatrace root certificate
+  ansible.builtin.get_url:
+    url: "https://ca.dynatrace.com/dt-root.cert.pem"
+    dest: "/tmp/dt-root.cert.pem"
+
+- name: Verify and run Dynatrace OneAgent installer
+  become: true
+  ansible.builtin.shell: |
+    ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; cat /tmp/Dynatrace-OneAgent-Linux-1.297.53.20240820-121511.sh ) | openssl cms -verify -CAfile /tmp/dt-root.cert.pem > /dev/null
+    /bin/sh /tmp/Dynatrace-OneAgent-Linux-1.297.53.20240820-121511.sh --set-monitoring-mode=fullstack --set-app-log-content-access=true
