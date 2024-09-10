@@ -1,0 +1,21 @@
+---
+
+- name: Load instance IPs from terraform.tfstate
+  set_fact:
+    instance_ips: "{{ lookup('file', '{{ file_location }}') | from_json | json_query('outputs.instance_ips.value') }}"
+
+- name: Debug instance IPs
+  debug:
+    var: instance_ips
+
+- name: Add EC2 instances IP to inventory
+  add_host:
+    name: "{{ item }}"
+    groups: ec2_instances
+  loop: "{{ instance_ips }}"
+  loop_control:
+    pause: 1
+
+- name: Wait for EC2 instance 
+  ansible.builtin.pause:
+    seconds: 120

@@ -1,0 +1,4 @@
+---
+# vars file for add_ip_host
+
+file_location: "/tmp/terraform_file/terraform.tfstate"
