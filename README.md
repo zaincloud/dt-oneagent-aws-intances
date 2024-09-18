@@ -38,6 +38,8 @@ project/
 Defines the Ansible playbook structure to run the Terraform script, add instance IPs to the inventory, and install Dynatrace OneAgent.
 
 ```yaml
+---
+
 - name: Run Terraform Script
   hosts: localhost
   roles:
